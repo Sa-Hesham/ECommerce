@@ -7,26 +7,26 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Domain.Entities;
 
-public class Product :BaseEntity
+public class Product :BaseEntity <int>
 {
-    public string Name { get; private set; } = null!;
+    public string Name { get;  set; } = null!;
 
-    public string Description { get; private set; } = null!;
-    public string PictureUrl { get; private set; } = null!;
+    public string Description { get;  set; } = null!;
+    public string PictureUrl { get;  set; } = null!;
 
-    public decimal price { get; private set; }
-
-
-    public Guid BrandId { get; private set; }    
-
-   public ProductBrand ? Brand { get; private set; }  
+    public decimal price { get;  set; }
 
 
+    public int BrandId { get;  set; }    
 
-    public Guid ProductTypeId { get; private set; }
+   public ProductBrand ? Brand { get;  set; }  
 
 
-    public ProductType ? ProductType { get; private set; }        
+
+    public int ProductTypeId { get;  set; }
+
+
+    public ProductType ? ProductType { get;  set; }        
 
 
 }

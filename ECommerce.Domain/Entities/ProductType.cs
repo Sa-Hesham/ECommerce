@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Domain.Entities;
 
-public  class ProductType :BaseEntity 
+public  class ProductType :BaseEntity<int> 
 {
-    public string Name { get; private set; } = null!;
+    public string Name { get;  set; } = null!;
 
 
-    public ICollection<Product> products { get; private set; }  =new List<Product>();   
+    public ICollection<Product> products { get;  set; }  =new List<Product>();   
 }
