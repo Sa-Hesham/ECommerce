@@ -13,5 +13,7 @@ public abstract class BaseEntity <Tkey>
     public DateTime CreatedAt {  get; protected set; }  = DateTime.Now;
     public DateTime ? UpdatedAt {  get; protected set; } 
 
+    public bool IsDeleted { get;  set; }   
+
 
 }

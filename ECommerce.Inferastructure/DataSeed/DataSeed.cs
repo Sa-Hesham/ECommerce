@@ -1,8 +1,6 @@
 ﻿
-using ECommerce.Domain.Abstraction;
-using ECommerce.Inferastructure.Data;
-using System.Text.Json;
-using System.Text.Json.Nodes;
+
+
 
 namespace ECommerce.Inferastructure.DataSeed;
 

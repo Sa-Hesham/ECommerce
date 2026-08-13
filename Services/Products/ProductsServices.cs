@@ -1,0 +1,45 @@
+﻿
+using AutoMapper;
+using ECommerce.Domain.Abstraction;
+using ECommerce.Domain.Entities;
+using ServicesAbstraction.Contracts;
+using Shared.Response;
+using System.Security.Cryptography.X509Certificates;
+
+namespace Services.Products;
+
+public class ProductsServices(IUnitOfWork _unitOfWork,IMapper _mapper) : IProductServices
+{
+    // Ineed ?UnitofWork 
+    public async Task<IEnumerable<productTypeResponse>> GetAllProductsType(CancellationToken ct = default)
+    {
+        var Entity = await _unitOfWork.GetRepo<ProductType, int>().Getallasync(ct);
+       var ProductType =  _mapper.Map<IEnumerable<productTypeResponse>>(Entity);
+        return ProductType;
+    }
+    public async Task<IEnumerable<BrandResponse>> GetBrands(CancellationToken ct = default)
+    {
+        var Entity = await _unitOfWork.GetRepo<ProductBrand, int>().Getallasync(ct);
+        var Broductbrand = _mapper.Map<IEnumerable<BrandResponse>>(Entity);
+        return Broductbrand;    
+    }
+
+    public async Task<ProductResponse?> GetProduct(int PrductId, CancellationToken ct = default)
+    {
+        var Entity = await _unitOfWork.GetRepo<Product, int>().GettByIdAsync(PrductId,ct);
+        var product = _mapper.Map<ProductResponse>(Entity);
+        return product;
+    }
+
+    public async Task<IEnumerable<ProductResponse>> GetProductsAsync(CancellationToken ct = default)
+    {
+        var Entity = await _unitOfWork.GetRepo<Product, int>().Getallasync(ct);
+        var products = _mapper.Map<IEnumerable< ProductResponse>>(Entity);
+        return products;
+    }
+
+    public Task ToggelSatus(int id)
+    {
+        throw new NotImplementedException();
+    }
+}
