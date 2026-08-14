@@ -4,13 +4,14 @@ using ECommerce.Domain.Abstraction;
 using ECommerce.Domain.Entities;
 using ServicesAbstraction.Contracts;
 using Shared.Response;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Services.Products;
 
 public class ProductsServices(IUnitOfWork _unitOfWork,IMapper _mapper) : IProductServices
 {
     // Ineed ?UnitofWork 
+
+  
     public async Task<IEnumerable<productTypeResponse>> GetAllProductsType(CancellationToken ct = default)
     {
         var Entity = await _unitOfWork.GetRepo<ProductType, int>().Getallasync(ct);
@@ -26,14 +27,16 @@ public class ProductsServices(IUnitOfWork _unitOfWork,IMapper _mapper) : IProduc
 
     public async Task<ProductResponse?> GetProduct(int PrductId, CancellationToken ct = default)
     {
-        var Entity = await _unitOfWork.GetRepo<Product, int>().GettByIdAsync(PrductId,ct);
+        var specfications = new ProductWithTypeAndBrandSpesfication(PrductId);
+        var Entity = await _unitOfWork.GetRepo<Product, int>().GettByIdAsync(specfications, ct);
         var product = _mapper.Map<ProductResponse>(Entity);
         return product;
     }
 
-    public async Task<IEnumerable<ProductResponse>> GetProductsAsync(CancellationToken ct = default)
+    public async Task<IEnumerable<ProductResponse>> GetProductsAsync(int? brandId, int? TypeId, CancellationToken ct = default)
     {
-        var Entity = await _unitOfWork.GetRepo<Product, int>().Getallasync(ct);
+        var spacefication = new ProductWithTypeAndBrandSpesfication( brandId,  TypeId);
+        var Entity = await _unitOfWork.GetRepo<Product, int>().Getallasync(spacefication, ct);
         var products = _mapper.Map<IEnumerable< ProductResponse>>(Entity);
         return products;
     }

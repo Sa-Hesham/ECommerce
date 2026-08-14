@@ -8,7 +8,7 @@ namespace ECommerce.Domain.Entities;
 
 public abstract class BaseEntity <Tkey> 
 {
-    public Tkey Id { get; protected set; }  
+    public Tkey Id { get; protected set; } = default!;
 
     public DateTime CreatedAt {  get; protected set; }  = DateTime.Now;
     public DateTime ? UpdatedAt {  get; protected set; } 

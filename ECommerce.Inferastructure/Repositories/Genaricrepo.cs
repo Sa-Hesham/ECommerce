@@ -47,4 +47,24 @@ public class Genaricrepo<TEntity, Tkey> : IGenaricRepository<TEntity, Tkey> wher
        
         
     }
+
+    public async Task<IEnumerable<TEntity>> Getallasync(Ispacefications<TEntity, Tkey> Spacefication, CancellationToken ct = default)
+    {
+
+       var query =  SpecficationEvaluator.CreateQuery<TEntity, Tkey>(_dbContext.Set<TEntity>(), Spacefication);
+
+        return await query.ToListAsync(ct) ;
+
+
+    }
+
+    public async Task<TEntity?> GettByIdAsync(Ispacefications<TEntity, Tkey> Spacefication, CancellationToken ct = default)
+    {
+      var query = SpecficationEvaluator.CreateQuery<TEntity, Tkey>(_dbContext.Set<TEntity>(), Spacefication);
+        return await query.FirstOrDefaultAsync(ct);
+    }
+
+    #region Spacefications
+
+    #endregion
 }

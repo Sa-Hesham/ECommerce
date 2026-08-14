@@ -25,5 +25,13 @@ public interface IGenaricRepository<TEntity ,Tkey> where TEntity : BaseEntity<Tk
 
 
 
-    public void ToggeToggleStatus(TEntity entity );    
+    public void ToggeToggleStatus(TEntity entity );
+
+
+    #region Spacefications
+    public Task<IEnumerable<TEntity>> Getallasync( Ispacefications<TEntity,Tkey> Spacefication, CancellationToken ct = default);
+
+
+    public Task<TEntity?> GettByIdAsync(Ispacefications<TEntity, Tkey> Spacefication, CancellationToken ct = default);
+    #endregion
 }

@@ -11,9 +11,9 @@ public class ProductController(IserviceManger _serviceManger) : ControllerBase
 {
 
     [HttpGet]
-    public async Task<IActionResult> GetProducts(CancellationToken ct)
+    public async Task<IActionResult> GetProducts( [FromQuery]int ?brandId ,[FromQuery]int? productTypeId ,CancellationToken ct)
     {
-        var rsult = await _serviceManger.ProductServices.GetProductsAsync(ct);
+        var rsult = await _serviceManger.ProductServices.GetProductsAsync( brandId ,  productTypeId , ct);
         return Ok(rsult);
     }
 

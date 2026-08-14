@@ -14,7 +14,8 @@ public class Mapping :Profile
         CreateMap<ProductBrand, BrandResponse>();
         CreateMap<Product, ProductResponse>()
            .ForMember(ds => ds.BrandName, opt => opt.MapFrom(src => src.Brand!.Name))
-           .ForMember(ds => ds.TypeName, opt => opt.MapFrom(src => src.ProductType!.Name));
+           .ForMember(ds => ds.TypeName, opt => opt.MapFrom(src => src.ProductType!.Name))
+           .ForMember(ds=>ds.PictureUrl,opt=>opt.MapFrom<PictureResolver>());
            
     }
 }
