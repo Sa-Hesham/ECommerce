@@ -3,6 +3,7 @@ using AutoMapper;
 using ECommerce.Domain.Abstraction;
 using ECommerce.Domain.Entities;
 using ServicesAbstraction.Contracts;
+using Shared;
 using Shared.Response;
 
 namespace Services.Products;
@@ -33,9 +34,9 @@ public class ProductsServices(IUnitOfWork _unitOfWork,IMapper _mapper) : IProduc
         return product;
     }
 
-    public async Task<IEnumerable<ProductResponse>> GetProductsAsync(int? brandId, int? TypeId, CancellationToken ct = default)
+    public async Task<IEnumerable<ProductResponse>> GetProductsAsync(ProductFiltiration filtiration, CancellationToken ct = default)
     {
-        var spacefication = new ProductWithTypeAndBrandSpesfication( brandId,  TypeId);
+        var spacefication = new ProductWithTypeAndBrandSpesfication( filtiration);
         var Entity = await _unitOfWork.GetRepo<Product, int>().Getallasync(spacefication, ct);
         var products = _mapper.Map<IEnumerable< ProductResponse>>(Entity);
         return products;

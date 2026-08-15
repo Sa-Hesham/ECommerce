@@ -23,6 +23,15 @@ public static  class SpecficationEvaluator
             }
         }
 
+        if(specfication.OrderBy != null)
+        {
+            query = query.OrderBy(specfication.OrderBy);    
+        }
+        else if(specfication.OrderByDescending != null)
+        {
+            query = query.OrderByDescending(specfication.OrderByDescending);
+        }
+
 
         return query;
     }

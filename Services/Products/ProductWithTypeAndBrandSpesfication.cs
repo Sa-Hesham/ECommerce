@@ -1,6 +1,7 @@
 ﻿using ECommerce.Domain.Abstraction;
 using ECommerce.Domain.Entities;
 using Services.Specfiactions;
+using Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,15 +13,32 @@ namespace Services.Products;
 internal class ProductWithTypeAndBrandSpesfication : BaseSpecfications<Product , int>
 {
 
-    public ProductWithTypeAndBrandSpesfication(int? brandId, int? productTypeId) :
+    public ProductWithTypeAndBrandSpesfication(ProductFiltiration filtiration) :
         base(p =>
-        (!brandId.HasValue || p.BrandId == brandId.Value) &&
-        (!productTypeId.HasValue || p.ProductTypeId == productTypeId.Value)) {
+        (!filtiration.brandId.HasValue || p.BrandId == filtiration.brandId.Value) &&
+        (!filtiration.productTypeId.HasValue || p.ProductTypeId == filtiration.productTypeId.Value)) {
 
         AddInclude(P => P.ProductType!);
         AddInclude(p => p.Brand!);
+        switch (filtiration.sort)
+        {
+            case ProductSortingOptions.NameAsc:
+                orderby(p => p.Name);
+                break;
 
-    
+            case ProductSortingOptions.NameDesc:
+                orderByDescending(p => p.Name);
+                break;
+
+            case ProductSortingOptions.PriceAsc:
+                orderby(p => p.price);
+                break;
+
+            case ProductSortingOptions.PriceDesc:
+                orderByDescending(p => p.price);
+                break;
+        }
+
     }
     public ProductWithTypeAndBrandSpesfication(int ProductId) :base(P=>P.Id== ProductId)
     {

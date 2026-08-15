@@ -10,4 +10,11 @@ public interface Ispacefications<TEntity , Tkey > where TEntity : BaseEntity<Tke
     Expression<Func<TEntity, bool>>? Where { get; }
 
     List<Expression<Func<TEntity,object>>> Includes { get;  }
+
+
+
+    Expression<Func<TEntity,object>>? OrderBy { get; }   
+    Expression<Func<TEntity,object>>? OrderByDescending { get; }   
+
+
 }
