@@ -11,4 +11,6 @@ public class ProductFiltiration
   public  int? brandId {  get; set; }
   public int? productTypeId {  get; set; }
   public  ProductSortingOptions? sort {  get; set; }
+
+   public string ? Search { get; set; }
 }

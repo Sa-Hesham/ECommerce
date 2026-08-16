@@ -16,7 +16,8 @@ internal class ProductWithTypeAndBrandSpesfication : BaseSpecfications<Product ,
     public ProductWithTypeAndBrandSpesfication(ProductFiltiration filtiration) :
         base(p =>
         (!filtiration.brandId.HasValue || p.BrandId == filtiration.brandId.Value) &&
-        (!filtiration.productTypeId.HasValue || p.ProductTypeId == filtiration.productTypeId.Value)) {
+        (!filtiration.productTypeId.HasValue || p.ProductTypeId == filtiration.productTypeId.Value)&&
+        (string.IsNullOrEmpty(filtiration.Search)||p.Name.ToLower().Contains(filtiration.Search.ToLower() ))) {
 
         AddInclude(P => P.ProductType!);
         AddInclude(p => p.Brand!);
