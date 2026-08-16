@@ -34,12 +34,14 @@ public class ProductsServices(IUnitOfWork _unitOfWork,IMapper _mapper) : IProduc
         return product;
     }
 
-    public async Task<IEnumerable<ProductResponse>> GetProductsAsync(ProductFiltiration filtiration, CancellationToken ct = default)
+    public async Task<PaginateResult<ProductResponse>> GetProductsAsync(ProductFiltiration filtiration, CancellationToken ct = default)
     {
         var spacefication = new ProductWithTypeAndBrandSpesfication( filtiration);
         var Entity = await _unitOfWork.GetRepo<Product, int>().Getallasync(spacefication, ct);
         var products = _mapper.Map<IEnumerable< ProductResponse>>(Entity);
-        return products;
+        var totalSpesfication =  new ProductCountSpesfication(filtiration);
+        var totalCount = await _unitOfWork.GetRepo<Product, int>().totalCountasync(totalSpesfication, ct);
+        return new PaginateResult<ProductResponse>(filtiration.PageIndex ?? 1 ,products.Count(), totalCount, products );
     }
 
     public Task ToggelSatus(int id)

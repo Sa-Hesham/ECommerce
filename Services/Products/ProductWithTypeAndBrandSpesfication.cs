@@ -39,7 +39,10 @@ internal class ProductWithTypeAndBrandSpesfication : BaseSpecfications<Product ,
                 orderByDescending(p => p.price);
                 break;
         }
-
+        if (filtiration.PageIndex.HasValue && filtiration.PageSize.HasValue)
+        {
+            AddPagination(filtiration.PageIndex.Value, filtiration.PageSize.Value);
+        }
     }
     public ProductWithTypeAndBrandSpesfication(int ProductId) :base(P=>P.Id== ProductId)
     {

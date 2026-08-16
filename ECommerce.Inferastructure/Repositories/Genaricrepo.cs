@@ -63,7 +63,10 @@ public class Genaricrepo<TEntity, Tkey> : IGenaricRepository<TEntity, Tkey> wher
       var query = SpecficationEvaluator.CreateQuery<TEntity, Tkey>(_dbContext.Set<TEntity>(), Spacefication);
         return await query.FirstOrDefaultAsync(ct);
     }
-
+    public async Task<int> totalCountasync(Ispacefications<TEntity, Tkey> Spacefication, CancellationToken ct = default)
+    {
+        return await SpecficationEvaluator.CreateQuery<TEntity, Tkey>(_dbContext.Set<TEntity>(), Spacefication).CountAsync(ct);
+    }
     #region Spacefications
 
     #endregion

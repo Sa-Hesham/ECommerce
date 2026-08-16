@@ -33,5 +33,8 @@ public interface IGenaricRepository<TEntity ,Tkey> where TEntity : BaseEntity<Tk
 
 
     public Task<TEntity?> GettByIdAsync(Ispacefications<TEntity, Tkey> Spacefication, CancellationToken ct = default);
+
+
+    public Task<int>totalCountasync(Ispacefications<TEntity, Tkey> Spacefication, CancellationToken ct = default);
     #endregion
 }

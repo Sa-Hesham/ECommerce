@@ -10,7 +10,7 @@ namespace ServicesAbstraction.Contracts;
 
 public interface IProductServices
 {
-    public Task<IEnumerable<ProductResponse>> GetProductsAsync(ProductFiltiration filtiration, CancellationToken ct = default);
+    public Task<PaginateResult<ProductResponse>> GetProductsAsync(ProductFiltiration filtiration, CancellationToken ct = default);
 
 
     public Task<ProductResponse?> GetProduct ( int PrductId , CancellationToken ct = default )  ;

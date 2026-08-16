@@ -32,6 +32,13 @@ public static  class SpecficationEvaluator
             query = query.OrderByDescending(specfication.OrderByDescending);
         }
 
+        if(specfication.IsBaginated )
+        {
+            query = query
+                .Skip(specfication.Skip)
+                .Take(specfication.Take);   
+        }
+
 
         return query;
     }

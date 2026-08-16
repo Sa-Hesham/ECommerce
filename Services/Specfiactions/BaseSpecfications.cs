@@ -22,17 +22,39 @@ public abstract class BaseSpecfications<TEntity, Tkey> : Ispacefications<TEntity
     {
         Includes.Add(includes);
     }
-    public  Expression<Func<TEntity, object>>? OrderBy { get;  private set; }
-    public  Expression<Func<TEntity, object>>? OrderByDescending { get; private set; }
+    #region Sorting
+    public Expression<Func<TEntity, object>>? OrderBy { get; private set; }
+    public Expression<Func<TEntity, object>>? OrderByDescending { get; private set; }
+
+
 
     protected void orderby(Expression<Func<TEntity, object>> orderByExpression)
     {
-        OrderBy = orderByExpression;  
+        OrderBy = orderByExpression;
     }
 
-    protected  void orderByDescending (Expression<Func<TEntity, object>> orderByDescendingExpression)
+    protected void orderByDescending(Expression<Func<TEntity, object>> orderByDescendingExpression)
     {
         OrderByDescending = orderByDescendingExpression;
+    } 
+    #endregion
+
+
+
+    public int Take {  get; private set; }
+
+    public int  Skip  {  get;  private set; }
+
+    public bool IsBaginated { get; private set; }
+
+
+
+    protected void AddPagination ( int PageIndex , int pageSize  )
+    {
+        IsBaginated = true; 
+         Take = pageSize; 
+        Skip = (PageIndex-1)*pageSize;    
+        
     }
 
 }
