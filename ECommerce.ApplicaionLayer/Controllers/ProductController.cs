@@ -7,7 +7,7 @@ namespace ECommerce.ApplicaionLayer.Controllers;
 
 
 [ApiController]
-[Route("Api/Products")]
+[Route("api/Products")]
 public class ProductController(IserviceManger _serviceManger) : ControllerBase
 {
 
