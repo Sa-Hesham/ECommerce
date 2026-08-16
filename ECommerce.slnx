@@ -1,6 +1,11 @@
 <Solution>
+  <Folder Name="/Core/">
+    <Project Path="ECommerce.Domain/ECommerce.Domain.csproj" />
+    <Project Path="Services/Services.csproj" Id="e4737587-6943-405b-9f2b-1317961dbffa" />
+    <Project Path="ServicesAbstraction/ServicesAbstraction.csproj" Id="609dead1-9838-48d1-b7b4-37855bcc6ea6" />
+  </Folder>
   <Project Path="ECommerce.API/ECommerce.API.csproj" />
   <Project Path="ECommerce.ApplicaionLayer/ECommerce.ApplicaionLayer.csproj" />
-  <Project Path="ECommerce.Domain/ECommerce.Domain.csproj" />
   <Project Path="ECommerce.Inferastructure/ECommerce.Inferastructure.csproj" />
+  <Project Path="Shared/Shared.csproj" Id="c3c9b34e-c7f7-4c52-95d8-baead657e959" />
 </Solution>

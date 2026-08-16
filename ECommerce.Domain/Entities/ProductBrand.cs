@@ -7,13 +7,10 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Domain.Entities;
 
-public class ProductBrand :BaseEntity
+public class ProductBrand :BaseEntity<int>
 {
 
-    public string Name { get; private set; } = null!;
+    public string Name { get;  set; } = null!;
 
-    public string Description { get; private set; } = null!;
-
-
-    public ICollection<Product> products { get; private set; } = new List<Product>();  
+    public ICollection<Product> products { get;  set; } = new List<Product>();  
 }
