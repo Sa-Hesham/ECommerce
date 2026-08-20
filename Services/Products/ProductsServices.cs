@@ -2,6 +2,7 @@
 using AutoMapper;
 using ECommerce.Domain.Abstraction;
 using ECommerce.Domain.Entities;
+using ECommerce.Domain.Exceptions;
 using ServicesAbstraction.Contracts;
 using Shared;
 using Shared.Response;
@@ -30,6 +31,9 @@ public class ProductsServices(IUnitOfWork _unitOfWork,IMapper _mapper) : IProduc
     {
         var specfications = new ProductWithTypeAndBrandSpesfication(PrductId);
         var Entity = await _unitOfWork.GetRepo<Product, int>().GettByIdAsync(specfications, ct);
+        if(Entity == null)
+            throw new ProductNotFoundException(PrductId);
+
         var product = _mapper.Map<ProductResponse>(Entity);
         return product;
     }

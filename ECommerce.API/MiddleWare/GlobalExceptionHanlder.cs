@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using ECommerce.Domain.Exceptions;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
@@ -13,6 +14,8 @@ public class GlobalExceptionHanlder(IProblemDetailsService problemservice ,
         httpContext.Response.StatusCode = exception switch
         {
             ValidationException => StatusCodes.Status400BadRequest,
+            ProductNotFoundException => StatusCodes.Status404NotFound,
+            BasketNotFoundException => StatusCodes.Status404NotFound,   
             _ => StatusCodes.Status500InternalServerError
         };
 
