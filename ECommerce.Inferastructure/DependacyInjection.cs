@@ -1,6 +1,9 @@
 ﻿using ECommerce.Domain.Abstraction;
+using ECommerce.Domain.Entities.IdentityModel;
 using ECommerce.Inferastructure.Data;
+using ECommerce.Inferastructure.Identity;
 using ECommerce.Inferastructure.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,7 +28,10 @@ public static class DependacyInjection
 
         });
        services.AddScoped<IBasketRepository, BasketRepository> ();
-       
+        services.IdentityConecttion(configuration);
+
+     
+
         return services;    
     }
 
@@ -47,5 +53,19 @@ public static class DependacyInjection
     
         return services;    
     }
-   
+
+    public static IServiceCollection IdentityConecttion(this IServiceCollection services, IConfiguration configuration)
+    {
+
+
+        services.AddDbContext<IdentityStoreDbContext>(options =>
+        {
+            options.UseSqlServer(configuration.GetConnectionString("IdentityConnection"));
+        });
+
+        services.AddIdentity<ApplicationUser, IdentityRole>()
+        .AddEntityFrameworkStores<IdentityStoreDbContext>();
+        return services;
+    }
+
 }

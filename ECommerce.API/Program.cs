@@ -27,12 +27,15 @@ builder.Services.InferastructureServices(builder.Configuration);
 builder.Services.AddCoreServices();
 
 builder.Services.AddTransient<IDataSeed,DataSeed>();
+builder.Services.AddScoped<ISeedIdentityData, SeedIdentityData>();
 builder.Services.AddSwaggerGen();   
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var data = scope.ServiceProvider.GetRequiredService<IDataSeed>();
+    var usersAndroles = scope.ServiceProvider.GetRequiredService<ISeedIdentityData>();
     data.DataSeed();
+    await usersAndroles.SeedRoleAndUserData(); 
 }
     app.UseExceptionHandler();
 
