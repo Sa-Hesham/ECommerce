@@ -1,6 +1,7 @@
 ﻿using ECommerce.Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Services.Authorizationservice;
 using System.ComponentModel.DataAnnotations;
 
 namespace ECommerce.API.MiddleWare;
@@ -15,7 +16,8 @@ public class GlobalExceptionHanlder(IProblemDetailsService problemservice ,
         {
             ValidationException => StatusCodes.Status400BadRequest,
             ProductNotFoundException => StatusCodes.Status404NotFound,
-            BasketNotFoundException => StatusCodes.Status404NotFound,   
+            BasketNotFoundException => StatusCodes.Status404NotFound,
+            AuthorizetionException=>StatusCodes.Status401Unauthorized,
             _ => StatusCodes.Status500InternalServerError
         };
 

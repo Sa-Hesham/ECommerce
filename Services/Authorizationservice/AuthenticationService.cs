@@ -1,0 +1,110 @@
+﻿using ECommerce.Domain.Entities.IdentityModel;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using ServicesAbstraction.Contracts;
+using Shared.IdentityDto;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Services.Authorizationservice;
+
+public class AuthenticationService(UserManager<ApplicationUser>_user , IConfiguration _config) : IAuthenticationService
+{
+    public async Task<UserResultResponse> LoginAsync(UserloginRequest request)
+    {
+       ApplicationUser ? user= await _user.FindByEmailAsync(request.Email);
+        if (user == null) {
+
+            throw new AuthorizetionException();
+
+
+        }
+
+        var ValidPassword = await _user.CheckPasswordAsync(user, request.Password);
+        if (!ValidPassword)
+        {
+            throw new AuthorizetionException();
+        }
+        return new UserResultResponse(user.DisplayName, await genrateTokenAsyc(user), user.Email!);
+
+
+
+
+    }
+
+    public async Task<UserResultResponse> RegisterAsync(UserRegisterRequest request)
+    {
+      var user =  await _user.FindByEmailAsync(request.Email);
+        if(user is not null)
+        {
+            throw new ValidationException("invalid Email the Email is Exist");
+        }
+
+        var applicationUser = new ApplicationUser
+        {
+            UserName = request.Username,
+            Email = request.Email,
+            DisplayName = request.DisplayName,
+
+        };
+
+        var result = await _user.CreateAsync(applicationUser, request.Password);
+        if (!result.Succeeded) {
+
+            string massege = string.Join(",", result.Errors.Select(e => e.Description));
+            throw new ValidationException(massege);
+        
+        }
+        return new UserResultResponse(applicationUser.DisplayName,await genrateTokenAsyc(applicationUser), applicationUser.Email!);
+    }
+
+
+    private async Task<string> genrateTokenAsyc( ApplicationUser user )
+    {
+        var Jwt = _config.GetSection("JWT");
+        var issuer = Jwt["Issuer"];
+        var audiance = Jwt["Audience"];
+        var key = Jwt["Key"];
+        var Expiration = DateTime.UtcNow.AddMinutes( int.Parse(Jwt["TokenExpirationInMinutes"]!));
+
+
+        List<Claim> claims = new()
+        {
+            new Claim (ClaimTypes.NameIdentifier, user.Id),
+            new Claim(ClaimTypes.Name , user.DisplayName!),
+            new Claim(ClaimTypes.Email,user.Email!),
+
+        };
+
+        foreach( var role in await  _user.GetRolesAsync(user))
+        {
+            claims.Add( new Claim(ClaimTypes.Role,role));
+        }
+
+
+        var tokenDercriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(claims),
+            Issuer = issuer,
+            Audience =audiance,
+            Expires = Expiration,
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key!))
+            ,SecurityAlgorithms.HmacSha256)
+
+        };
+
+
+        var token = new JwtSecurityTokenHandler();
+        var securitytoken = token.CreateJwtSecurityToken(tokenDercriptor);
+       var  AccessToken = token.WriteToken(securitytoken);
+
+        return AccessToken;
+    }
+}

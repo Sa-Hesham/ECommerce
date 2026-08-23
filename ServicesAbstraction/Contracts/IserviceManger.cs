@@ -12,4 +12,6 @@ public interface IserviceManger
     public IProductServices ProductServices { get; }    
 
     public IBasketService BasketService { get; }    
+
+    public IAuthenticationService AuthenticationService {  get; }
 }

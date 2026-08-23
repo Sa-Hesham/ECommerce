@@ -1,5 +1,6 @@
 ﻿
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServicesAbstraction.Contracts;
 using Shared.Response;
@@ -8,6 +9,7 @@ namespace ECommerce.ApplicaionLayer.Controllers;
 
 [ApiController]
 [Route("api/Basket")]
+[Authorize]
 public class BasketController(IserviceManger _serviceManger) : ControllerBase
 {
 

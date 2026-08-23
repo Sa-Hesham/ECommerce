@@ -1,6 +1,10 @@
 
 
 using ECommerce.API.MiddleWare;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,8 +32,60 @@ builder.Services.AddCoreServices();
 
 builder.Services.AddTransient<IDataSeed,DataSeed>();
 builder.Services.AddScoped<ISeedIdentityData, SeedIdentityData>();
-builder.Services.AddSwaggerGen();   
+builder.Services.AddAuthentication(option =>
+{
+    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    option.DefaultChallengeScheme= JwtBearerDefaults.AuthenticationScheme;
+
+}).AddJwtBearer(option =>
+{
+    var jwt = builder.Configuration.GetSection("JWT");
+    option.TokenValidationParameters = new()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwt["Issuer"],
+        ValidAudience = jwt["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt["Key"]!)),
+        ClockSkew = TimeSpan.Zero
+
+            
+
+    };
+});
+builder.Services.AddAuthorization();
+builder.Services.AddEndpointsApiExplorer(); 
+builder.Services.AddSwaggerGen(option =>
+{
+    
+    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
+});    
 var app = builder.Build();
+
 using (var scope = app.Services.CreateScope())
 {
     var data = scope.ServiceProvider.GetRequiredService<IDataSeed>();
@@ -52,6 +108,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();   
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllers();
 

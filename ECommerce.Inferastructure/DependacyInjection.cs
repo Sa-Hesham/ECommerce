@@ -63,7 +63,10 @@ public static class DependacyInjection
             options.UseSqlServer(configuration.GetConnectionString("IdentityConnection"));
         });
 
-        services.AddIdentity<ApplicationUser, IdentityRole>()
+        services.AddIdentity<ApplicationUser, IdentityRole>(option =>
+        {
+            option.User.RequireUniqueEmail = true;  
+        })
         .AddEntityFrameworkStores<IdentityStoreDbContext>();
         return services;
     }
