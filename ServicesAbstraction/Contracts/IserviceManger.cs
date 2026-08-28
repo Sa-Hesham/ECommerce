@@ -14,4 +14,7 @@ public interface IserviceManger
     public IBasketService BasketService { get; }    
 
     public IAuthenticationService AuthenticationService {  get; }
+
+
+    public IOrderService OrderService { get; }  
 }

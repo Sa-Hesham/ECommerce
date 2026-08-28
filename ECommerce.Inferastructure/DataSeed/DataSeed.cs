@@ -2,6 +2,8 @@
 
 
 
+using ECommerce.Domain.Entities.OrderModule;
+
 namespace ECommerce.Inferastructure.DataSeed;
 
 public class DataSeed(AppDbContext _context) : IDataSeed
@@ -41,6 +43,16 @@ public class DataSeed(AppDbContext _context) : IDataSeed
 
             if (products is not null && products.Any())
                 _context.Products.AddRange(products);
+        }
+
+        if (!_context.DeliveryMethods.Any())
+        {
+            var deliveryJson = File.ReadAllText("..\\ECommerce.Inferastructure\\DataSeed\\JsonData\\delivery.json");
+
+            var delivery = JsonSerializer.Deserialize<List<DeliveryMethod>>(deliveryJson);
+
+            if (delivery is not null && delivery.Any())
+                _context.DeliveryMethods.AddRange(delivery);
         }
 
         _context.SaveChanges(); 
