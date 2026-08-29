@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using ECommerce.Domain.Entities;
+using ECommerce.Domain.Exceptions;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Services.Authorizationservice;
 using System.ComponentModel.DataAnnotations;
 
 namespace ECommerce.API.MiddleWare;
@@ -13,6 +16,8 @@ public class GlobalExceptionHanlder(IProblemDetailsService problemservice ,
         httpContext.Response.StatusCode = exception switch
         {
             ValidationException => StatusCodes.Status400BadRequest,
+            NotFoundException => StatusCodes.Status404NotFound,
+            AuthorizetionException=>StatusCodes.Status401Unauthorized,
             _ => StatusCodes.Status500InternalServerError
         };
 

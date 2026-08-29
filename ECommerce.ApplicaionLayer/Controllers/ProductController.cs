@@ -1,7 +1,9 @@
 ﻿
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServicesAbstraction.Contracts;
 using Shared;
+using Shared.Response;
 
 namespace ECommerce.ApplicaionLayer.Controllers;
 
@@ -20,6 +22,10 @@ public class ProductController(IserviceManger _serviceManger) : ControllerBase
 
 
     [HttpGet("{Id:int}")]
+    [Consumes("application/json")]
+    [ProducesResponseType<ProductResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public  async Task<IActionResult> GetProduct(int Id, CancellationToken ct) { 
 
         var product =   await _serviceManger.ProductServices.GetProduct(Id, ct);
