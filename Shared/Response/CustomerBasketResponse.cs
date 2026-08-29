@@ -13,5 +13,13 @@ public  record CustomerBasketResponse
 
     public ICollection< BasketItemsResponse > BasketItem{ get; init; } = [];
 
+    public string? PaymentIntentId { get; set; }
+
+    public string? ClientSecret { get; set; }
+
+    public decimal ShippingPrice { get; set; }
+
+    public int? DeliveryMethodId { get; set; }
+
 
 }
