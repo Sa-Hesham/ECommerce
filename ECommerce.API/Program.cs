@@ -2,6 +2,7 @@
 
 using ECommerce.API.MiddleWare;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -54,6 +55,7 @@ builder.Services.AddAuthentication(option =>
             
 
     };
+   
 });
 builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer(); 
@@ -93,22 +95,25 @@ using (var scope = app.Services.CreateScope())
     data.DataSeed();
     await usersAndroles.SeedRoleAndUserData(); 
 }
-    app.UseExceptionHandler();
-
-    app.UseStatusCodePages();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-// Configure the HTTP request pipeline.
+
+app.UseExceptionHandler();
+
+app.UseStatusCodePages();
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();   
+
+app.UseStaticFiles();
+
+app.UseCors();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
-app.UseAuthentication();
 
 app.MapControllers();
 

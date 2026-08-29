@@ -17,4 +17,8 @@ public interface IserviceManger
 
 
     public IOrderService OrderService { get; }  
+
+
+
+    public IPaymentService paymentService { get; }  
 }

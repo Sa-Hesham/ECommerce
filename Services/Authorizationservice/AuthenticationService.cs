@@ -1,9 +1,12 @@
 ﻿using ECommerce.Domain.Entities.IdentityModel;
+using ECommerce.Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using ServicesAbstraction.Contracts;
 using Shared.IdentityDto;
+using Shared.Response;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,6 +20,42 @@ namespace Services.Authorizationservice;
 
 public class AuthenticationService(UserManager<ApplicationUser>_user , IConfiguration _config) : IAuthenticationService
 {
+    public async Task<bool> CheakEmailAddressAsync(string email)
+    {
+       var user =  await _user.FindByEmailAsync(email);
+        if (user != null)
+            return true;
+        return false;
+    }
+
+    public async Task<UserResultResponse> GetCurrentuserAsync(string userEmail)
+    {
+        var user = await _user.FindByEmailAsync(userEmail);
+        if (user == null)
+            throw new USerNotFoundExseption(userEmail);
+
+        return new UserResultResponse(user.DisplayName, await genrateTokenAsyc(user), user.Email!);
+    }
+
+    public async Task<AddressDto> GetuserAddressAsync(string userEmail)
+    {
+        var user = await _user.Users.Include(u=>u.Address)
+            .FirstOrDefaultAsync(u=>u.Email==userEmail);
+        if (user == null)
+            throw new USerNotFoundExseption(userEmail);
+
+        return new AddressDto
+        {
+            FirstName = user.Address?.FirstName ?? string.Empty,  
+            LasttName = user.Address?.LastName ?? string.Empty, 
+            Street= user.Address?.Street ?? string.Empty,   
+            City= user.Address?.City ?? string.Empty,   
+            Country=  user.Address?.Country ?? string.Empty,  
+
+
+        };
+    }
+
     public async Task<UserResultResponse> LoginAsync(UserloginRequest request)
     {
        ApplicationUser ? user= await _user.FindByEmailAsync(request.Email);
@@ -65,6 +104,34 @@ public class AuthenticationService(UserManager<ApplicationUser>_user , IConfigur
         return new UserResultResponse(applicationUser.DisplayName,await genrateTokenAsyc(applicationUser), applicationUser.Email!);
     }
 
+    public async Task<AddressDto> updateuserAddressAsync(string userEmail, AddressDto address)
+    {
+        var user = await _user.Users.Include(u => u.Address)
+             .FirstOrDefaultAsync(u => u.Email == userEmail);
+        if (user == null)
+            throw new USerNotFoundExseption(userEmail);
+        if(user.Address != null)
+        {
+            user.Address.FirstName = address.FirstName;
+            user.Address.LastName = address.LasttName;
+            user.Address.Street = address.Street;
+            user.Address.City = address.City;   
+            user.Address.Country = address.Country; 
+        }
+
+        var useraddress = new Address
+        {
+            FirstName = address.FirstName,
+            LastName= address.LasttName,
+            Street = address.Street,
+            City = address.City,
+            Country = address.Country,
+
+        };
+        user.Address= useraddress;  
+       await  _user.UpdateAsync(user);
+        return address;
+    }
 
     private async Task<string> genrateTokenAsyc( ApplicationUser user )
     {

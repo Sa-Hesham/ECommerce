@@ -11,13 +11,14 @@ public class Order :BaseEntity<Guid>
         
     }
 
-    public Order(string userEmail, ShippingAddress address, ICollection<OrderItem> orderItems, DeliveryMethod deliveryMethod, decimal subTotal)
+    public Order(string userEmail, ShippingAddress address, ICollection<OrderItem> orderItems, DeliveryMethod deliveryMethod, decimal subTotal ,string paymentIntentId)
     {
         UserEmail = userEmail;
         Address = address;
         OrderItems = orderItems;
         DeliveryMethod = deliveryMethod;
         SubTotal = subTotal;
+        PaymentIntentId=paymentIntentId;
     }
 
     public string UserEmail { get; set; } = null!;
@@ -35,5 +36,5 @@ public class Order :BaseEntity<Guid>
 
     public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.UtcNow;
 
-    public string? PaymentIntentId { get; set; } = string.Empty; 
+    public string ? PaymentIntentId { get; set; } = string.Empty; 
 }
